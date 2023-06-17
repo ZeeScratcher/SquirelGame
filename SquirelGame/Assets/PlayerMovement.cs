@@ -10,10 +10,14 @@ public class PlayerMovement : MonoBehaviour
     Vector2 movement;
     Vector2 mousePos;
 
+    public LayerMask coinLayer;
+
+    public int coinCount;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        coinCount = 0;
     }
 
     // Update is called once per frame
@@ -29,5 +33,15 @@ public class PlayerMovement : MonoBehaviour
         Vector2 LookDir = mousePos - rb.position;
         float angle = Mathf.Atan2(LookDir.y, LookDir.x) * Mathf.Rad2Deg - 90f;
         rb.rotation = angle;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (coinLayer == (coinLayer | (1 << collision.gameObject.layer)))
+        {
+            coinCount++;
+            Debug.Log("Collected a coin! Coin count: " + coinCount);
+            Destroy(collision.gameObject);
+        }
     }
 }
